@@ -11,16 +11,16 @@ class ContactList
   class << self
 	  def print_menu
 	  	puts "Here is a list of avaliable commands:"
-	  	puts "	new  - Create a new contact"
-	  	puts "	list  - list all contacts"
-	  	puts "	show  - show a contact"
+	  	puts "	new     - Create a new contact"
+	  	puts "	list    - list all contacts"
+	  	puts "	show    - show a contact"
 	  	puts "	search  - search a contacts" 
 	  end
 
 	  def list
 	  	contact_list=Contact.all
 	  	contact_list.each do |contact|
-	  		puts "#{contact[0]}: #{contact[1]} (#{contact[2]})"
+	  		puts "#{contact.id}: #{contact.name} (#{contact.email})"
 	  	end
 	  	puts "#{contact_list.length} records found"
 	  end
@@ -30,17 +30,14 @@ class ContactList
 	  	name = STDIN.gets.chomp
 	  	print "Email Address: "
 	  	email= STDIN.gets.chomp
-			Contact.create(name, email)
+	  	contact_list = Contact.all
+	  	id = (contact_list.length + 1)
+			Contact.create(id, name, email)
 		end
 
 		def search_index(index)
 			found = Contact.find(index)
-		 	found.each do |contact|
-				puts "#{contact[0]}: #{contact[1]} (#{contact[2]})"
-			end
-			if found.empty?
-				puts "No contacts found"
-			end
+			puts "#{found.id}: #{found.name} (#{found.email})"
 		end
 
 		def search
@@ -48,7 +45,7 @@ class ContactList
 			search = STDIN.gets.chomp
 			found =  Contact.search(search)
 				found.each do |contact|
-				puts "#{contact[0]}: #{contact[1]} #{contact[2]}"
+				puts "#{contact.id}: #{contact.name} (#{contact.email})"
 			end
 			puts "#{found.length} record total"
 		end
@@ -59,10 +56,8 @@ end
 	
 
 	puts ARGV
-		command = nil
-	  command = ARGV[0]
-	  index = nil
-	  index = ARGV[1]
+	command = ARGV[0]
+	index = ARGV[1]
 
   if !command
   	ContactList.print_menu
